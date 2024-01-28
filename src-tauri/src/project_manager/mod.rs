@@ -122,7 +122,6 @@ pub fn texcol_update_raw_tex_content_by_id(id: i32, content: &str) -> String {
     let mut conn: diesel::prelude::SqliteConnection = establish_connection();
     let project = pmdb::get_project_by_id(&mut conn, id).expect("Error getting project");
     let tex_path = project.tex_path;
-    println!("The edit tex path is {}", tex_path);
     let tex_path_str = tex_path.as_str();
     let _ = std::fs::write(tex_path_str, content.as_bytes());
     format!("Raw tex content updated!")

@@ -1,8 +1,5 @@
-use leptos::leptos_dom::logging::console_log;
 use wasm_bindgen::prelude::*;
-use wasm_bindgen::JsCast;
-use web_sys::console;
-use web_sys::{Element, Node};
+use web_sys::{Element};
 
 #[wasm_bindgen]
 extern "C" {
