@@ -3,7 +3,6 @@ name = "ReviewMgr"
 version = "0.0.1"
 description = "A lightweight (only ~10mb after installing on windows) manager for reviews."
 authors = ["Qingxuan Lv"]
-license = ""
 repository = ""
 edition = "2021"
 
@@ -27,6 +26,7 @@ itertools = "0"
 indoc = "2.0.4"
 convert_case = "0"
 ropey = "1.6.1"
+diesel_migrations = { version = "2.1.0", features = ["sqlite"] }
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem
