@@ -1,7 +1,11 @@
 use chrono::format;
+use diesel::sqlite::SqliteConnection;
 use tauri::Manager;
 
+use crate::project_manager::pmdb::check_sqlite_and_run_migration;
+
 use super::lazy_vars::APP_SQLITE_PATH;
+use super::project_manager::pmdb;
 use std::path::{Path, PathBuf};
 
 
@@ -97,6 +101,9 @@ pub fn texcol_app_dir(handle: tauri::AppHandle) -> bool {
   let resource_path = resource_path.to_str().unwrap();
   let mut sqllite_path = APP_SQLITE_PATH.lock().unwrap();
   *sqllite_path = format!("{}\\texcol_db.sqlite3", resource_path).to_string();
+  
+  check_sqlite_and_run_migration(&(*sqllite_path.as_str()));
+
   let path = Path::new(resource_path);
   if path.exists() {
     true

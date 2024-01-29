@@ -1,4 +1,4 @@
-mod pmdb;
+pub mod pmdb;
 
 use core::num;
 use std::fs::read_to_string;

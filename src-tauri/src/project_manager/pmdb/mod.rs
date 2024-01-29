@@ -103,3 +103,31 @@ pub fn delete_review_by_id(conn: &mut SqliteConnection, review_id: i32) -> Resul
     use schema::reviews::dsl::*;
     diesel::delete(reviews.filter(id.eq(review_id))).execute(conn)
 }
+
+fn texcol_run_migration(conn: &mut SqliteConnection) {
+    
+    let migrations = vec![
+        "CREATE TABLE IF NOT EXISTS projects (id INTEGER NOT NULL PRIMARY KEY, name VARCHAR(255) NOT NULL, description TEXT NOT NULL, tex_path TEXT NOT NULL, bib_path TEXT NOT NULL, proj_path TEXT NOT NULL, created_at TIMESTAMP NOT NULL, updated_at TIMESTAMP NOT NULL);",
+        "CREATE TABLE IF NOT EXISTS reviews (id INTEGER NOT NULL PRIMARY KEY, project_id INTEGER NOT NULL, status BOOLEAN NOT NULL, reviewer TEXT NOT NULL, description TEXT NOT NULL, created_at TIMESTAMP NOT NULL, updated_at TIMESTAMP NOT NULL, FOREIGN KEY (project_id) REFERENCES projects(id));"
+    ];
+    
+    for migration in migrations {
+        diesel::sql_query(migration)
+            .execute(conn)
+            .expect("Error running migration");
+    }
+}
+
+pub fn check_sqlite_and_run_migration(database_url: &str) {
+    let mut conn = SqliteConnection::establish(database_url)
+        .unwrap_or_else(|_| panic!("Error connecting to {}", database_url));
+    // check if the database is empty
+    let table_count = diesel::sql_query("SELECT COUNT(*) FROM sqlite_master WHERE type = 'table'").execute(&mut conn).expect("Error check table ");
+    
+    if table_count == 0 {
+        println!("No table found, running migration");
+        texcol_run_migration(&mut conn);
+    } else {
+        println!("Table found, skipping migration");
+    }
+}
